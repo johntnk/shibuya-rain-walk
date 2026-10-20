@@ -1,0 +1,4 @@
+.DS_Store
+node_modules/
+# Mixamo 动作需自己下载，不进仓库（见 README）
+night/assets/anim/mixamo-*.fbx

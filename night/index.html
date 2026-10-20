@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>渋谷 · SHIBUYA</title>
+<link rel="icon" href="data:,">
+<style>
+  html, body { margin: 0; height: 100%; background: #060a1a; overflow: hidden; font-family: -apple-system, "Hiragino Sans", "PingFang SC", sans-serif; }
+  canvas { display: block; }
+  canvas.drag { cursor: grab; } canvas.drag:active { cursor: grabbing; }
+  #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #eef2ff; text-align: center;
+             background: radial-gradient(ellipse at center, rgba(6,10,26,0.2), rgba(6,10,26,0.72)); transition: opacity .6s; z-index: 5; }
+  #overlay.hidden { opacity: 0; pointer-events: none; }
+  #overlay h1 { font-weight: 300; letter-spacing: .5em; margin: 0 0 6px; font-size: 30px; text-shadow: 0 0 22px rgba(255,190,140,.45); }
+  #overlay .sub { margin: 0 0 22px; font-size: 13px; letter-spacing: .22em; opacity: .62; }
+  .moods { display: flex; gap: 10px; margin: 0 0 22px; }
+  .moods button { font: 400 13px/1 -apple-system, "PingFang SC", sans-serif; letter-spacing: .12em; color: #eef2ff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+                  border-radius: 16px; padding: 9px 18px; cursor: pointer; }
+  .moods button.on { background: #f3e6d4; color: #1b1408; border-color: #f3e6d4; }
+  .go { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .go button { font: 300 16px/1 -apple-system, "PingFang SC", sans-serif; letter-spacing: .22em; border: 0; border-radius: 22px; padding: 13px 28px 13px 32px; cursor: pointer; }
+  #goSky { color: #1b1408; background: linear-gradient(90deg, #ffd9a6, #f6b48a); box-shadow: 0 0 26px rgba(255,170,110,.45); }
+  #goStreet { color: #0b1024; background: #e9f0ff; box-shadow: 0 0 22px rgba(140,180,255,.35); }
+  .go button:disabled { opacity: .5; cursor: default; }
+  #overlay .basic { margin: 22px 0 0; font-size: 12.5px; opacity: .72; letter-spacing: .04em; line-height: 1.95; }
+  #prompt { position: fixed; left: 50%; bottom: 9%; transform: translateX(-50%); color: #fff; font-size: 15px; letter-spacing: .08em; padding: 9px 18px 9px 14px;
+            background: rgba(10,14,30,.58); border: 1px solid rgba(255,255,255,.18); border-radius: 18px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 3; white-space: nowrap; }
+  #prompt.on { opacity: 1; }
+  #prompt kbd { display: inline-block; min-width: 1.4em; text-align: center; padding: 2px 6px; margin-right: 8px; border-radius: 6px; background: #f3e6d4; color: #1b1408; font: 600 13px/1.2 -apple-system, sans-serif; }
+  #hint { position: fixed; left: 16px; top: 14px; color: #fff; font-size: 12px; opacity: .55; letter-spacing: .05em; line-height: 1.8; pointer-events: none; z-index: 3; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+  #toast { position: fixed; left: 50%; top: 14%; transform: translateX(-50%); color: #fff; font-size: 15px; letter-spacing: .2em; opacity: 0; transition: opacity .5s; pointer-events: none; z-index: 3; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+  #toast.on { opacity: 1; }
+  #transit { position: fixed; inset: 0; background: #05070f; opacity: 0; pointer-events: none; z-index: 4; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #e8ecff; }
+  #transit .name { letter-spacing: .6em; font-size: 13px; opacity: .6; margin-bottom: 14px; }
+  #transit .floor { font: 200 46px/1 "Helvetica Neue", -apple-system, sans-serif; letter-spacing: .08em; }
+  #transit .line { width: 1px; height: 120px; margin-top: 22px; background: linear-gradient(#05070f, #ffd9a6, #05070f); }
+  #hud { position: fixed; left: 14px; bottom: 12px; color: #e9e2cf; font-size: 12px; opacity: .45; pointer-events: none; display: none; z-index: 3; }
+  #hud.on { display: block; }
+  #record-controls { margin-top: 18px; max-width: min(540px, calc(100vw - 32px)); }
+  #record-toggle, #record-stop { font: inherit; font-size: 13px; color: #f3e6d4; cursor: pointer;
+    border: 1px solid rgba(255,217,166,.3); border-radius: 18px; padding: 8px 16px; background: rgba(8,14,30,.7); }
+  #record-toggle:hover, #record-stop:hover { background: rgba(86,51,47,.85); }
+  #record-toggle:disabled, #record-stop:disabled { opacity: .45; cursor: default; }
+  #record-note { font-size: 12px; line-height: 1.7; opacity: .72; margin: 9px 0 0; }
+  #record-result { margin-top: 12px; font-size: 13px; }
+  #record-download { color: #ffd9a6; text-underline-offset: 4px; }
+  #record-dock { position: fixed; top: 16px; right: 16px; z-index: 10; display: flex; align-items: center; gap: 12px;
+    padding: 9px 12px; border: 1px solid rgba(245,180,170,.3); border-radius: 12px; background: rgba(12,16,28,.88);
+    color: #f4e8db; font-size: 12px; max-width: calc(100vw - 56px); }
+  #record-status { color: #ffd0c2; }
+  #record-dock[hidden], #record-result[hidden] { display: none; }
+  @media (max-height: 760px) { #overlay { overflow-y: auto; justify-content: flex-start; box-sizing: border-box; padding: 24px 0; } }
+</style>
+<script type="importmap">
+{ "imports": {
+    "three": "../vendor/three/build/three.module.js",
+    "three/addons/": "../vendor/three/examples/jsm/",
+    "@pixiv/three-vrm": "../vendor/three-vrm/three-vrm.module.js"
+} }
+</script>
+</head>
+<body>
+<div id="overlay"><h1>渋 谷</h1><p class="sub" id="sub">SHIBUYA · SCRAMBLE SQUARE · SHIBUYA SKY</p>
+  <div class="moods"><button data-mood="sunset" class="on">落日观景 17:05</button><button data-mood="clear">夜景观景 20:30</button><button data-mood="night">雨夜漫游 21:40</button></div>
+  <div class="go"><button id="goSky" disabled>城市准备中…</button><button id="goStreet" disabled>从街头出发</button></div>
+  <p class="basic">鼠标或方向键 ↑ ↓ ← → 转视角（鼠标锁不住时按住拖动）· 滚轮拉远拉近<br>按住 ← → 慢速左右转，↑ ↓ 抬头低头，松开后柔和停稳 · W A S D 走 · Shift 跑<br>E 进门 / 乘扶梯 · C 乘梯时换镜头 · V 第一人称 · T 换时段（落日 / 夜景 / 雨夜） · 1–5 换地方 · 0 回起点 · M 静音 · Esc / P 暂停<br>R 开始 / 停止录屏 · J 雨夜下雨 / 雨停 · 录制时请保持窗口大小</p>
+  <div id="record-controls">
+    <button id="record-toggle" type="button" disabled>开始录制 · R</button>
+    <p id="record-note" role="status">涩谷准备好后，可录制画面和内部声音。</p>
+    <div id="record-result" hidden><a id="record-download">保存刚录好的视频</a></div>
+  </div>
+</div>
+<div id="record-dock" hidden><span id="record-status" role="status"></span><button id="record-stop" type="button">停止并保存</button></div>
+<div id="prompt"></div>
+<div id="hint"></div>
+<div id="toast"></div>
+<div id="transit"><div class="name" id="tname">SKY GATE</div><div class="floor" id="tfloor">14F</div><div class="line"></div></div>
+<div id="hud"></div>
+<script type="module" src="./src/main.js?v=20261018-manual-recording"></script>
+</body>
+</html>

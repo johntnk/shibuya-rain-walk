@@ -6,6 +6,18 @@
 
 > ⚠️ 这是一个**半成品**。很多地方还没做完（见文末「已知问题」），欢迎大家拿去继续完善。
 
+> ⚠️ **人物动作和视频里不完全一样。** 视频里主角和路人的走路、跑步、转身、起步、停步、推门用的是 Adobe Mixamo 的动作，Mixamo 的条款不允许把动作文件公开分发，所以仓库里**没有**这 8 个文件，默认用的是自带的免费动作库：
+>
+> | | 视频里（装了 Mixamo 动作） | 下载后直接运行 |
+> |---|---|---|
+> | 主角走路 | 真人男步态 | 自带动作库的走路，没那么自然 |
+> | 跑步 | 真人男性跑步 | 自带库的慢跑，偏女性化 |
+> | 原地转身、起步、停步 | 有 | 没有，直接切换 |
+> | 推门 | 伸手推门 | 没有，直接进门 |
+> | 路人走路 | 真人男女步态 | 自带库的走路 |
+>
+> 画面、雨、伞、便利店、扶梯、大屏等其他内容完全一样。想要和视频一样的动作，按下面「[换上 Mixamo 动作](#可选换上-mixamo-动作)」自己免费下载，放进去刷新就行。
+
 A browser walk through Shibuya, Tokyo — the Scramble Crossing, a convenience store you can walk into, and the sunset escalator on the SHIBUYA SKY rooftop, in three times of day. Anime-style rendering with three.js, no game engine. Built entirely by vibecoding with Claude Code (Claude Opus 5.5). Work in progress.
 
 ## 运行
@@ -34,10 +46,13 @@ macOS 也可以直接双击 `打开涩谷.command`。
 
 ## 可选：换上 Mixamo 动作
 
-仓库里自带的动作是 Quaternius 的 Universal Animation Library（CC0）。原版主角的走路、跑步、转身、起步、停步、推门用的是 Adobe Mixamo 的动作，按 Mixamo 的条款不能随仓库分发，想要更自然的动作可以自己下载：
+仓库里自带的动作是 Quaternius 的 Universal Animation Library（CC0）。视频里用的是 Adobe Mixamo 的动作，按 Mixamo 的条款不能随仓库分发，需要自己下载（免费，要注册 Adobe 账号）：
 
-1. 登录 [Mixamo](https://www.mixamo.com)，搜索下面的动作，下载时选 **FBX Binary、Without Skin、30 fps**，走路和跑步勾选 **In Place**。
-2. 按下表改名，放进 `night/assets/anim/`，刷新页面即可。缺哪个就自动用自带动作代替，不会报错。
+1. 登录 [Mixamo](https://www.mixamo.com)，在 Animations 里搜索下面的动作。
+2. 每个动作点 Download，选 **Format: FBX Binary (.fbx)**、**Skin: Without Skin**、**Frames per Second: 30**；走路和跑步先在右边勾上 **In Place** 再下载。
+3. 按下表把文件改名，放进 `night/assets/anim/`，刷新页面即可。缺哪个就自动用自带动作代替，不会报错。
+
+搜索词只是建议，同类动作都能用，挑你喜欢的步态就行。
 
 | 文件名 | 用途 | 建议搜索 |
 |---|---|---|

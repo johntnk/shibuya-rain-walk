@@ -18,6 +18,8 @@
 >
 > 画面、雨、伞、便利店、扶梯、大屏等其他内容完全一样。想要和视频一样的动作，按下面「[换上 Mixamo 动作](#可选换上-mixamo-动作)」自己免费下载，放进去刷新就行。
 
+> ℹ️ **宣传视频里有几个镜头是用拍片脚本拍的**，不是游戏里的操作：玻璃上雨珠的变焦（焦点从人拉到雨珠）、城市上空的环绕俯瞰、扶梯上从落日慢慢变成晴夜。游戏里镜头是跟在主角身后、可以自由转动，换时段是按 **T**（中间有一下黑场），没有变焦效果。场景本身、灯光、雨和人都是游戏里实时画出来的同一套东西。
+
 A browser walk through Shibuya, Tokyo — the Scramble Crossing, a convenience store you can walk into, and the sunset escalator on the SHIBUYA SKY rooftop, in three times of day. Anime-style rendering with three.js, no game engine. Built entirely by vibecoding with Claude Code (Claude Opus 5.5). Work in progress.
 
 ## 运行

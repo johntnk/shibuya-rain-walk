@@ -34,7 +34,7 @@ node night/serve.cjs
 
 macOS 也可以直接双击 `打开涩谷.command`。
 
-建议用 Chrome 内核的浏览器，Safari 还没测过（可能出现整块黑或白）。首次加载约 200 MB 模型和数据，需要等一会儿。
+Chrome、Edge、Safari 都用过。Safari 早期某些角度会出现整块黑或白，已经修好，但后面几轮改动主要在 Chrome 内核里测，遇到问题可以先换 Chrome 试试。首次加载约 200 MB 模型和数据，需要等一会儿。
 
 ## 操作
 
@@ -103,7 +103,7 @@ vendor/             three.js、three-vrm
 
 ## 已知问题
 
-- 只在 Chrome 内核浏览器里测过，Safari、Firefox 未验证。
+- 主要在 Chrome 内核浏览器里测；Safari 用过（早期的黑块问题已修），最近几轮没专门复测；Firefox 未验证。
 - 全城共用的文字贴图已经放满，便利店的部分标签和海报是空白的。
 - 车、树、行人的样式重复较多；行人没有实时影子。
 - 46F 回廊的布局是按官网示意图和照片推测的。
